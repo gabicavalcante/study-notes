@@ -1,14 +1,8 @@
 name: Update Notebooks And Refresh Page
-on:
-  schedule:
-    - cron: "5 * * * *"
+on: push
 
 jobs:
   update-notebooks:
-    if: |
-      (github.event_name == 'schedule') ||
-      (github.repository != 'fastai/fastpages') &&
-      (github.event.issue.title == '[dashboard] Refresh Notebooks')
     runs-on: ubuntu-latest
     steps:
       - name: See event name
