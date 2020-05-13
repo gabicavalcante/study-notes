@@ -76,7 +76,7 @@ jobs:
             })
         env:
           ERROR_STRING: ${{ steps.update_nb.outputs.error_str }}
-          RUN_ID: ${{ github.run_id	 }}
+          RUN_ID: ${{ github.run_id	 }} 
 
       - name: save notebooks & images
         run: |
