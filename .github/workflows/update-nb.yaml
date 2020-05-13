@@ -4,8 +4,6 @@ on:
     - cron: "5 * * * *"
   issues:
     types: [opened]
-  push:
-    branches:
 
 jobs:
   update-notebooks:
@@ -33,7 +31,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `Automated refresh of notebooks instantiated with run id [${run_id}](https://github.com/github/covid19-dashboard/actions/runs/${run_id}).`
+              body: `Automated refresh of notebooks instantiated with run id [${run_id}](https://github.com/gabicavalcante/study-notes/actions/runs/${run_id}).`
             })
         env:
           RUN_ID: ${{ github.run_id	 }}
@@ -56,7 +54,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get -y --force-yes install chromium-chromedriver
           npm install -g electron@6.1.4 orca
-          pip3 install -r ./_notebooks/requirements.txt  
+          pip3 install -r ./_notebooks/requirements.txt
           python3 -m ipykernel install --user --name python3
           sudo chmod -R 777 .
 
@@ -77,19 +75,19 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: "Error updating notebooks",
-              body: `These are the notebooks that failed to update properly: \n${err}\n\n See run [${run_id}](https://github.com/github/covid19-dashboard/actions/runs/${run_id}) for more details.`
+              body: `These are the notebooks that failed to update properly: \n${err}\n\n See run [${run_id}](https://github.com/gabicavalcante/study-notes/actions/runs/${run_id}) for more details.`
             })
         env:
           ERROR_STRING: ${{ steps.update_nb.outputs.error_str }}
           RUN_ID: ${{ github.run_id	 }}
 
-      - name: save notebooks & images
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add images/ 
-          git commit -m'[bot] refresh notebooks'
-          git push -f
+      # - name: save notebooks & images
+      #   run: |
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #     git config --global user.name "github-actions[bot]"
+      #     git add images/
+      #     git commit -m'[bot] refresh notebooks'
+      #     git push -f
 
       - name: convert notebooks and word docs to posts
         uses: ./_action_files
@@ -102,7 +100,7 @@ jobs:
       - name: Jekyll build
         uses: docker://hamelsmu/fastpages-jekyll
         with:
-          args: bash -c "gem install bundler && jekyll build -V --trace"
+          args: bash -c "gem install bundler && jekyll build -V"
         env:
           JEKYLL_ENV: "production"
 
@@ -132,7 +130,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `An error occurred when attempting to refresh one or more of the notebooks in run [${run_id}](https://github.com/github/covid19-dashboard/actions/runs/${run_id}). These are the notebooks that failed to update properly: \n${err}`
+              body: `An error occurred when attempting to refresh one or more of the notebooks in run [${run_id}](https://github.com/gabicavalcante/study-notes/actions/runs/${run_id}). These are the notebooks that failed to update properly: \n${err}`
             })
         env:
           ERROR_STRING: ${{ steps.update_nb.outputs.error_str }}
@@ -149,7 +147,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `An workflow error occurred in run [${run_id}](https://github.com/github/covid19-dashboard/actions/runs/${run_id}) when attempting to refresh the notebooks.`
+              body: `An workflow error occurred in run [${run_id}](https://github.com/gabicavalcante/study-notes/actions/runs/${run_id}) when attempting to refresh the notebooks.`
             })
         env:
           RUN_ID: ${{ github.run_id	 }}
