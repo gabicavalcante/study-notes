@@ -5,7 +5,9 @@ on:
 
 jobs:
   update-notebooks:
-    if: (github.event_name == 'schedule' || (github.event.issue.title == '[dashboard] Refresh Notebooks' && github.event_name == 'issues'))'
+    if: |
+      (github.repository != 'fastai/fastpages') &&
+      (github.event.issue.title == '[dashboard] Refresh Notebooks')
     runs-on: ubuntu-latest
     steps:
       - name: See event name
