@@ -54,6 +54,7 @@ jobs:
           npm install -g electron@6.1.4 orca
           pip3 install -r ./_notebooks/requirements.txt
           pip install -U plotly
+          pip install ipykernel
           python3 -m ipykernel install --user --name python3
           sudo chmod -R 777 .
 
