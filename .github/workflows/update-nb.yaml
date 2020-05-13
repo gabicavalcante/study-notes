@@ -4,6 +4,8 @@ on:
     - cron: "5 * * * *"
   issues:
     types: [opened]
+  push:
+    branches:
 
 jobs:
   update-notebooks:
