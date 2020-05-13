@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 cd $(dirname "$0")/..
 cd _notebooks/
@@ -6,10 +7,9 @@ ERRORS=""
 
 for file in *.ipynb
 do
-    if [ "${file}" = "2020-02-20-test.ipynb" ]; then
-        echo "Skipping ${file}"
-    elif papermill --kernel python3 "${file}" "${file}"; then
+    if papermill --kernel python3 "${file}" "${file}"; then
         echo "Sucessfully refreshed ${file}\n\n\n\n"
+        git add "${file}"
     else
         echo "ERROR Refreshing ${file}"
         ERRORS="${ERRORS}, ${file}"

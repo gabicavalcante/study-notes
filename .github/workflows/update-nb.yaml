@@ -1,8 +1,13 @@
 name: Update Notebooks And Refresh Page
-on: push
+on:
+  schedule:
+    - cron: "5 * * * *"
+  issues:
+    types: [opened]
 
 jobs:
   update-notebooks:
+    if: (github.event_name == 'schedule' || (github.event.issue.title == '[dashboard] Refresh Notebooks' && github.event_name == 'issues'))'
     runs-on: ubuntu-latest
     steps:
       - name: See event name
@@ -49,9 +54,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get -y --force-yes install chromium-chromedriver
           npm install -g electron@6.1.4 orca
-          pip3 install -r ./_notebooks/requirements.txt
-          pip install -U plotly
-          pip install ipykernel
+          pip3 install -r ./_notebooks/requirements.txt  
           python3 -m ipykernel install --user --name python3
           sudo chmod -R 777 .
 
@@ -76,14 +79,15 @@ jobs:
             })
         env:
           ERROR_STRING: ${{ steps.update_nb.outputs.error_str }}
-          RUN_ID: ${{ github.run_id	 }} 
+          RUN_ID: ${{ github.run_id	 }}
 
       - name: save notebooks & images
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git add .
-          git commit -m '[bot] refresh notebooks'
+          git add images/
+          git add _notebooks/data/
+          git commit -m'[bot] refresh notebooks'
           git push -f
 
       - name: convert notebooks and word docs to posts
@@ -97,7 +101,7 @@ jobs:
       - name: Jekyll build
         uses: docker://hamelsmu/fastpages-jekyll
         with:
-          args: bash -c "gem install bundler && jekyll build -V"
+          args: bash -c "gem install bundler && jekyll build -V --trace"
         env:
           JEKYLL_ENV: "production"
 
